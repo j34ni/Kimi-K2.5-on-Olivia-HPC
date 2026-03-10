@@ -1,0 +1,51 @@
+Bootstrap: docker
+From: nvidia/cuda:12.6.3-cudnn-devel-ubuntu24.04
+
+%post
+    apt-get update && apt-get install -y wget git autoconf automake libtool make && rm -rf /var/lib/apt/lists/*
+
+    wget -q https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-aarch64.sh -O /tmp/miniforge.sh
+    bash /tmp/miniforge.sh -b -p /opt/conda
+    rm /tmp/miniforge.sh
+
+    /opt/conda/bin/conda install -y -c conda-forge \
+        "mvapich=4.1=shs_cuda*" \
+        python=3.12
+
+    git clone --depth 1 --branch v1.17.0 https://github.com/aws/aws-ofi-nccl.git /tmp/aws-ofi-nccl
+    cd /tmp/aws-ofi-nccl
+    ./autogen.sh
+    ./configure \
+        --with-libfabric=/opt/conda \
+        --with-cuda=/usr/local/cuda \
+        --with-nccl=/usr/local/cuda \
+        --prefix=/opt/conda
+    make -j$(nproc)
+    make install
+    cd / && rm -rf /tmp/aws-ofi-nccl
+
+    /opt/conda/bin/pip install sglang --extra-index-url https://download.pytorch.org/whl/cu126
+    /opt/conda/bin/pip install nvidia-cudnn-cu12==9.16.0.29
+
+    /opt/conda/bin/conda clean -afy
+
+%environment
+    export PATH=/opt/conda/bin:$PATH
+    export FI_PROVIDER=cxi
+    export MPICH_CH4_NETMOD=ofi
+    export NCCL_NET="AWS Libfabric"
+    export NCCL_SOCKET_IFNAME=hsn
+    export NCCL_NET_GDR_LEVEL=PHB
+    export NCCL_CROSS_NIC=1
+    export NCCL_PROTO=^LL128
+    export FI_CXI_DEFAULT_CQ_SIZE=131072
+    export FI_CXI_DEFAULT_TX_SIZE=16384
+    export FI_CXI_DISABLE_HOST_REGISTER=1
+    export FI_CXI_RX_MATCH_MODE=software
+    export FI_MR_CACHE_MONITOR=userfaultfd
+    export MV2_ENABLE_AFFINITY=0
+    export LD_LIBRARY_PATH=/opt/conda/lib:$LD_LIBRARY_PATH
+
+%labels
+    Model moonshotai/Kimi-K2.5
+    Network Slingshot-11 / CXI / mvapich-4.1-shs_cuda / shs-libfabric-2.2.0 / aws-ofi-nccl-1.17.0
