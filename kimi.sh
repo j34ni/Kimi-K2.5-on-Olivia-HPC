@@ -23,6 +23,7 @@ srun --mpi=pmi2 apptainer exec --nv \
     --env XDG_CACHE_HOME=${CACHE} \
     --env TRITON_CACHE_DIR=${CACHE}/triton \
     --env TORCHINDUCTOR_CACHE_DIR=${CACHE}/torchinductor \
+    --env FLASHINFER_CACHE_DIR=${CACHE}/flashinfer \
     --bind ${CACHE}:${CACHE} \
     ${SIF} \
     bash -c "python -m sglang.launch_server \
