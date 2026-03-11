@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18968392.svg)](https://doi.org/10.5281/zenodo.18968392)
+
 # Kimi-K2.5-on-Olivia-HPC
 This repository contains the files needed to run Kimi K2.5 on the Olivia HPC cluster at the University of Oslo, using SGLang as the inference server.
 
