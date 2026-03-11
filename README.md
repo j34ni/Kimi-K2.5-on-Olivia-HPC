@@ -30,8 +30,8 @@ Expected results:
 - `fi_info -p cxi` should show 4 CXI domains per node
 - `H H` latency ~3-4µs
 - `H H` bandwidth ~24 GB/s
-- `D D` numbers will be lower due to MPI staging overhead, NCCL bypasses this and will achieve closer to `H H` bandwidth for actual inference traffic
+- Device-to-Device (`D D`) numbers will be lower due to MPI staging overhead, NCCL bypasses this and will achieve closer to Host-to-Host (`H H`) bandwidth for actual inference traffic
 
 ## Note
 
-The model weights (~630GB) must be pre-downloaded before submitting the job.
+The model weights (~630GB for `moonshotai/Kimi-K2.5`) must be pre-downloaded before submitting the job.
