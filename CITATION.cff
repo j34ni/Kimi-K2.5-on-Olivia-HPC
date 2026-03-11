@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: Kimi-K2.5-on-Olivia-HPC (container recipe)
+message: "If you use this software, please cite it using the metadata below."
+authors:
+  - family-names: Iaquinta
+    given-names: Jean
+doi: 10.5281/zenodo.18968392
+version: 1.0.0
+date-released: 2026-03-11
+url: "https://github.com/j34ni/Kimi-K2.5-on-Olivia-HPC"
